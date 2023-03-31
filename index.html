@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Contact Us</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        background-color: #0099ff;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 36px;
+        margin: 0;
+      }
+
+      section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 400px;
+        padding: 20px;
+      }
+
+      .container {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        max-width: 600px;
+        padding: 40px;
+        text-align: center;
+      }
+
+      label {
+        display: block;
+        font-size: 18px;
+        margin-bottom: 10px;
+        text-align: left;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      textarea {
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      textarea {
+        height: 150px;
+      }
+
+      input[type="submit"] {
+        background-color: #0099ff;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-size: 18px;
+        padding: 10px 20px;
+        transition: background-color 0.5s ease;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #0066cc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Contact Us</h1>
+    </header>
+    <section>
+      <div class="container">
+        <form>
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required />
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required />
+
+          <label for="message">Message:</label>
+          <textarea id="message" name="message" required></textarea>
+
+          <input type="submit" value="Submit" />
+        </form>
+        <div>
+          <p id="result-text"></p>
+        </div>
+      </div>
+     
+    </section>
+    
+    <script>
+      const form = document.querySelector("form");
+
+      form.addEventListener("submit", (event) => {
+        // prevent the form submit from refreshing the page
+        event.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const message = document.getElementById("message").value;
+
+        console.log("Name: ", name);
+        console.log("Email: ", email);
+        console.log("Message: ", message);
+
+        // Use your API endpoint URL you copied from the previous step
+        const endpoint =
+          "https://t856w00vx3.execute-api.ap-south-1.amazonaws.com/default/sendContactEmail";
+        // We use JSON.stringify here so the data can be sent as a string via HTTP
+        const body = JSON.stringify({
+          senderName: name,
+          senderEmail: email,
+          message: message,
+        });
+        const requestOptions = {
+          method: "POST",
+          body,
+        };
+
+        fetch(endpoint, requestOptions)
+          .then((response) => {
+            if (!response.ok) throw new Error("Error in fetch");
+            return response.json();
+          })
+          .then((response) => {
+            document.getElementById("result-text").innerText =
+              "Email sent successfully!";
+          })
+          .catch((error) => {
+            document.getElementById("result-text").innerText =
+              "An unknown error occurred.";
+          });
+
+        // You don't need to query the form element again, as you already have a reference to it
+        // const form = document.querySelector('form');
+      });
+    </script>
+  </body>
+</html>
